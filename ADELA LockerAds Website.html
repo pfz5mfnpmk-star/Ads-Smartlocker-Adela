@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADELA Locker Ads — Giải pháp OOH trên tủ locker thông minh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f6;
+    --card:#ffffff;
+    --navy:#122a6b;
+    --blue:#2657e0;
+    --blue-dark:#173da8;
+    --line:#e2e6ee;
+    --text:#1a1f2b;
+    --text-dim:#5b6472;
+    --text-dimmer:#8891a0;
+    --icon-blue:#2f5fde;
+    --icon-red:#d8455b;
+    --icon-green:#5fb544;
+    --icon-purple:#8b5cf6;
+    --radius-lg:22px;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{ background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; line-height:1.55; }
+  h1,h2,h3{ font-family:'Inter',sans-serif; color:var(--navy); font-weight:800; line-height:1.15; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+
+  /* nav */
+  header{ position:sticky; top:0; z-index:60; background:rgba(238,241,246,0.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1180px; margin:0 auto; }
+  .logo{ font-weight:800; font-size:19px; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  .logo span{ color:var(--text-dimmer); font-weight:500; font-size:13px; }
+  .nav-links{ display:flex; gap:26px; font-size:13.5px; color:var(--text-dim); font-weight:500; }
+  .nav-links a:hover{ color:var(--blue); }
+  .nav-cta{ background:var(--blue); color:#fff; font-weight:700; font-size:13.5px; padding:10px 18px; border-radius:9px; }
+  @media (max-width:840px){ .nav-links{ display:none; } }
+
+  /* pill */
+  .pill{ display:inline-flex; align-items:center; background:var(--blue); color:#fff; font-weight:700; font-size:12.5px; padding:8px 18px; border-radius:100px; margin-bottom:18px; }
+  .pill.outline{ background:#eaf0ff; color:var(--blue); }
+
+  /* slide card wrapper */
+  .slide{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:0 14px 34px -18px rgba(18,42,107,0.18); padding:52px; margin:30px auto; max-width:1180px; }
+  @media (max-width:700px){ .slide{ padding:30px 22px; border-radius:16px; } }
+  .slide-band{ padding:6px 0; }
+
+  /* image placeholder */
+  .slot{
+    border:2px dashed #c7cfe0; border-radius:var(--radius); background:#f5f7fb;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    text-align:center; color:var(--text-dimmer); padding:18px; width:100%;
+  }
+  .slot svg{ width:26px; height:26px; opacity:0.55; }
+  .slot .add{ font-weight:700; font-size:13px; color:#9aa4b8; }
+  .slot .cap{ font-size:11.5px; color:#aab2c2; max-width:220px; }
+  .ar-16-9{ aspect-ratio:16/9; }
+  .ar-4-3{ aspect-ratio:4/3; }
+  .ar-1-1{ aspect-ratio:1/1; }
+  .ar-3-4{ aspect-ratio:3/4; }
+  .ar-9-16{ aspect-ratio:9/16; }
+  .ar-21-9{ aspect-ratio:21/9; }
+
+  /* generic layout helpers */
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
+  @media (max-width:860px){ .grid2{ grid-template-columns:1fr; } }
+  .stack{ display:flex; flex-direction:column; gap:16px; }
+  h2.title{ font-size:clamp(24px,3vw,32px); margin-bottom:14px; }
+  p.desc{ color:var(--text-dim); font-size:15px; max-width:560px; }
+  p.desc b{ color:var(--text); }
+
+  /* stat row */
+  .stat-row{ display:flex; gap:34px; flex-wrap:wrap; margin-top:26px; }
+  .stat-group{ display:flex; align-items:center; gap:18px; }
+  .stat b{ font-size:32px; color:var(--blue-dark); font-weight:800; display:block; }
+  .stat span{ font-size:12.5px; color:var(--text-dim); }
+  .badge-outline{ border:1px solid var(--blue); color:var(--blue); font-size:12px; font-weight:700; padding:8px 14px; border-radius:100px; white-space:nowrap; }
+
+  /* building grid */
+  .building-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:760px){ .building-grid{ grid-template-columns:repeat(2,1fr); } }
+  .building-grid .slot{ min-height:150px; position:relative; }
+  .kv-tag{ position:absolute; top:8px; left:8px; background:var(--card); border:1px solid var(--line); font-size:10.5px; font-weight:700; color:var(--navy); padding:4px 9px; border-radius:100px; }
+
+  .list-box{ background:#f5f7fb; border:1px solid var(--line); border-radius:var(--radius); padding:24px; }
+  .list-box h4{ color:var(--navy); font-size:14.5px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .list-box p, .list-box li{ font-size:13.5px; color:var(--text-dim); }
+  .list-box ul{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+
+  /* icon points (Hieu qua toi uu) */
+  .point{ display:flex; gap:16px; align-items:flex-start; padding:16px 0; }
+  .point-icon{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-weight:800; font-size:13px; }
+  .point h4{ font-size:14px; color:var(--navy); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.01em; }
+  .point p{ font-size:13.5px; color:var(--text-dim); }
+
+  /* pricing (reuse light) */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:10px; }
+  @media (max-width:920px){ .pricing-grid{ grid-template-columns:1fr; } }
+  .price-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; display:flex; flex-direction:column; }
+  .price-card h3{ font-size:17px; margin-bottom:8px; }
+  .price-card .desc2{ font-size:12.5px; color:var(--text-dim); margin-bottom:16px; min-height:50px; }
+  .price-card .old{ font-size:13px; color:var(--text-dimmer); text-decoration:line-through; }
+  .price-card .new{ font-size:26px; font-weight:800; color:var(--navy); margin:2px 0; }
+  .price-card .per{ font-size:11.5px; color:var(--text-dimmer); margin-bottom:10px; }
+  .price-card .maint{ font-size:12px; color:var(--blue); font-weight:600; margin-bottom:16px; }
+  .price-card ul{ list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:18px; flex:1; }
+  .price-card li{ font-size:12.8px; color:var(--text-dim); padding-left:16px; position:relative; }
+  .price-card li::before{ content:'✓'; position:absolute; left:0; color:var(--blue); font-weight:700; }
+  .price-card .cta-btn{ text-align:center; background:var(--blue); color:#fff; border-radius:8px; padding:11px; font-weight:700; font-size:13.5px; }
+
+  .combo-row{ display:flex; gap:16px; margin-top:20px; flex-wrap:wrap; }
+  .combo-card{ flex:1; min-width:250px; border:1px dashed var(--blue); background:#eef2ff; border-radius:12px; padding:20px; }
+  .combo-card h4{ color:var(--blue-dark); font-size:13px; margin-bottom:10px; }
+  .combo-card ul{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .combo-card li{ font-size:12.8px; color:var(--text-dim); padding-left:14px; position:relative; }
+  .combo-card li::before{ content:'+'; position:absolute; left:0; color:var(--blue); font-weight:700; }
+
+  /* spec cards */
+  .spec-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:760px){ .spec-grid{ grid-template-columns:1fr; } }
+  .spec-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; }
+  .spec-card .spec-head{ display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+  .spec-icon{ width:38px; height:38px; border-radius:9px; background:#eef2ff; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:800; }
+  .spec-card h4{ color:var(--navy); font-size:15px; }
+  .spec-values{ display:flex; gap:18px; align-items:center; margin-bottom:14px; }
+  .spec-val{ background:#eef2ff; border-radius:10px; padding:16px 20px; text-align:center; flex:1; }
+  .spec-val b{ font-size:30px; color:var(--blue-dark); display:block; }
+  .spec-val span{ font-size:11.5px; color:var(--text-dim); }
+  .spec-x{ font-size:20px; color:var(--text-dimmer); }
+  .spec-card .cap-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dimmer); margin-bottom:10px; }
+  .spec-card .note{ font-size:12.5px; color:var(--text-dim); font-style:italic; }
+
+  /* addon (support) */
+  .addon-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:760px){ .addon-grid{ grid-template-columns:1fr; } }
+  .addon-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; }
+  .addon-card .num{ font-size:11.5px; color:var(--text-dimmer); font-weight:700; margin-bottom:10px; }
+  .addon-card h3{ font-size:18px; margin-bottom:8px; }
+  .addon-card p{ font-size:13.5px; color:var(--text-dim); margin-bottom:14px; }
+  .addon-tag{ display:inline-block; background:#eaf0ff; color:var(--blue-dark); font-size:12px; font-weight:700; padding:7px 14px; border-radius:100px; }
+
+  /* journey timeline (small) */
+  .journey{ display:flex; flex-direction:column; gap:20px; position:relative; padding-left:26px; }
+  .journey::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line); }
+  .jstep{ position:relative; }
+  .jstep::before{ content:''; position:absolute; left:-26px; top:2px; width:12px; height:12px; border-radius:50%; background:var(--blue); }
+  .jstep h5{ font-size:12.5px; font-weight:800; color:var(--navy); text-transform:uppercase; margin-bottom:4px; letter-spacing:0.03em; }
+  .jstep p{ font-size:13px; color:var(--text-dim); }
+
+  /* process steps */
+  .process{ display:flex; gap:0; }
+  @media (max-width:880px){ .process{ flex-direction:column; gap:22px; } }
+  .step{ flex:1; padding:0 12px; position:relative; }
+  .step:first-child{ padding-left:0; }
+  .step:last-child{ padding-right:0; }
+  .step .marker{ width:38px; height:38px; border-radius:50%; background:var(--blue); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .step h4{ font-size:13.5px; color:var(--navy); margin-bottom:6px; }
+  .step p{ font-size:12.5px; color:var(--text-dim); }
+
+  .foot-slide{ text-align:center; }
+  .foot-slide h2{ font-size:clamp(30px,5vw,52px); margin-bottom:16px; }
+  .foot-slide p{ color:var(--text-dim); font-size:15px; margin-bottom:8px; }
+  .foot-slide .contact{ color:var(--blue); font-weight:700; margin-top:16px; }
+
+  footer{ text-align:center; padding:30px 0; color:var(--text-dimmer); font-size:12.5px; }
+  .caption-note{ font-size:11.5px; color:var(--text-dimmer); font-style:italic; margin-top:14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo">ADELA <span>Locker Ads</span></div>
+    <nav class="nav-links">
+      <a href="#hinhthuc">Hình thức</a>
+      <a href="#quytrinh">Quy trình</a>
+      <a href="#thongso">Thông số</a>
+      <a href="#giadichvu">Báo giá</a>
+    </nav>
+    <a href="#lienhe" class="nav-cta">Liên hệ tư vấn</a>
+  </div>
+</header>
+
+<!-- SLIDE 1: COVER -->
+<section class="slide">
+  <div class="grid2">
+    <div>
+      <h1 style="font-size:clamp(40px,6vw,64px);">Locker<br>Ads</h1>
+      <p class="desc" style="margin-top:16px;">Giải pháp OOH quảng cáo trên tủ locker thông minh — do ADELA phát triển và vận hành trên mạng lưới 1.000+ điểm tủ toàn quốc.</p>
+    </div>
+    <div class="slot ar-16-9">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+      <div class="add">+ Thêm ảnh demo tủ locker (ảnh bìa)</div>
+      <div class="cap">Gợi ý: ảnh tủ locker full-wrap banner, tỉ lệ ngang 16:9</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2: GIOI THIEU -->
+<section class="slide">
+  <div class="grid2">
+    <div>
+      <div class="pill">Giới thiệu</div>
+      <h2 class="title">Locker Ads</h2>
+      <p class="desc"><b>Là quảng cáo trên tủ locker</b> (hộp giao – nhận hàng tự động) tại chung cư, khu dân cư, siêu thị hoặc các điểm công cộng.</p>
+      <div class="stat-row">
+        <div class="stat-group">
+          <div class="stat"><b>1.000+</b><span>Điểm tủ toàn quốc</span></div>
+          <div class="stat"><b>250K+</b><span>Căn hộ*</span></div>
+          <div class="badge-outline">Độ phủ hệ thống</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-group">
+          <div class="stat"><b>900K+</b><span>Cư dân*</span></div>
+          <div class="stat"><b>150K+</b><span>Lượt sử dụng/tháng*</span></div>
+          <div class="badge-outline">Phạm vi tiếp cận</div>
+        </div>
+      </div>
+      <p class="caption-note">* Ước tính theo tỷ lệ trung bình mỗi điểm, quy đổi từ mạng lưới hiện tại lên quy mô 1.000+ điểm.</p>
+    </div>
+    <div class="stack">
+      <div class="slot ar-4-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh tủ tại AEON MALL</div>
+      </div>
+      <div class="slot ar-4-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh demo banner thương hiệu</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: NHAM CHON CHINH XAC -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="building-grid">
+        <div class="slot ar-3-4"><div class="kv-tag">KV Đống Đa</div></div>
+        <div class="slot ar-3-4"><div class="kv-tag">KV Tây Hồ</div></div>
+        <div class="slot ar-3-4"><div class="kv-tag">KV Ba Đình</div></div>
+        <div class="slot ar-3-4"><div class="kv-tag">KV Hà Đông</div></div>
+        <div class="slot ar-3-4"><div class="kv-tag">KV Hoàng Mai</div></div>
+        <div class="slot ar-3-4"><div class="kv-tag">KV Long Biên</div></div>
+      </div>
+      <p class="caption-note">Thêm ảnh các tòa nhà/chung cư tiêu biểu theo từng khu vực có đặt tủ.</p>
+    </div>
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Nhắm chọn chính xác</h2>
+      <p class="desc" style="margin-bottom:22px;">ADELA đưa ra các tiêu chí để khách hàng lựa chọn vị trí đặt tủ phù hợp với mục tiêu chiến dịch quảng cáo.</p>
+      <div class="stack">
+        <div class="list-box">
+          <h4>🏢 Theo nhóm chung cư</h4>
+          <ul>
+            <li><b>Cao cấp:</b> Vinhomes Nguyễn Chí Thanh, Hanoi Aqua Central, The Manor &amp; The Garden, 6th Element, Season Avenue...</li>
+            <li><b>Trung cấp:</b> The Sun, AnLand Complex, Fivestar Garden, Thống Nhất Complex, River Garden, Intracom Riverside...</li>
+            <li><b>Bình dân:</b> OCT5 Cổ Nhuế, CT2 Yên Nghĩa, 19T4 Kiến Hưng, An Lạc, H10 Thanh Xuân.</li>
+          </ul>
+        </div>
+        <div class="list-box">
+          <h4>📍 Theo vị trí</h4>
+          <p>Khu vực Tây Hồ, Bắc Từ Liêm, Nam Từ Liêm, Đống Đa, Cầu Giấy, Hà Đông, Ba Đình, Thanh Xuân, Hoàng Mai, Đông Anh, Long Biên...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: HIEU QUA TOI UU -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Hiệu quả tối ưu</h2>
+      <div class="stack" style="margin-top:18px;">
+        <div class="slot ar-16-9">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+          <div class="add">+ Thêm ảnh tủ tại AEON MALL</div>
+        </div>
+        <div class="slot ar-16-9">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+          <div class="add">+ Thêm ảnh demo hoạt động ngoài trời</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-blue);">3H</div>
+        <div><h4>High Reach – Precision – Frequency</h4><p>Tủ locker là điểm chạm bắt buộc, tiếp cận đúng nhóm cư dân/nhân viên văn phòng thu nhập cao với tần suất lặp lại lớn và thời gian đứng chờ 15–30s, giúp gia tăng trí nhớ thương hiệu vượt trội.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-red);">🎯</div>
+        <div><h4>Tiếp cận đúng người – đúng bối cảnh</h4><p>Thông điệp chỉ tiếp cận cư dân thực sự của tòa nhà — nhóm có thu nhập ổn định, sức mua cao và thói quen mua sắm online thường xuyên.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-green);">O2O</div>
+        <div><h4>Kích hoạt Online-to-Offline &amp; Retargeting</h4><p>Thời gian chờ giúp người dùng dễ dàng quét QR, nhận ưu đãi, đồng thời có thể retarget lại chính xác nhờ dữ liệu địa chỉ nhận hàng.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-purple);">🛒</div>
+        <div><h4>Thời điểm tiếp xúc lý tưởng</h4><p>Người dùng nhận hàng trong tâm trạng tích cực — mong chờ, dễ tiếp nhận thông điệp và bị tác động mạnh bởi quảng cáo liên quan đến nhu cầu vừa phát sinh.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: HIEU SUAT TOI DA -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Hiệu suất tối đa &amp; Đo lường chính xác</h2>
+      <div class="stack" style="margin-top:18px;">
+        <div class="point" style="padding-top:0;">
+          <div class="point-icon" style="background:var(--icon-blue);">↗</div>
+          <div><h4>Độc quyền vị trí quảng cáo</h4><p>Xuất hiện trong không gian riêng tư của chung cư, tạo cảm giác uy tín – độc quyền, không gây phiền nhiễu.</p></div>
+        </div>
+        <div class="point">
+          <div class="point-icon" style="background:var(--icon-green);">⚛</div>
+          <div><h4>Gắn kết tối đa với không gian sống</h4><p>Đặt ngay trong môi trường sống (lobby, tầng trệt), tạo cảm giác thân thuộc – tin cậy, liên kết trực tiếp với hành vi mua sắm online vừa diễn ra.</p></div>
+        </div>
+        <div class="point">
+          <div class="point-icon" style="background:var(--icon-purple);">📊</div>
+          <div><h4>Dễ dàng đo lường hiệu quả</h4><p>Đo lường tỷ lệ chuyển đổi (conversion rate) qua số lần quét mã QR hoặc sử dụng mã giảm giá đặc biệt.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="slot ar-16-9">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh chiến dịch trong sảnh chung cư</div>
+      </div>
+      <div class="slot ar-4-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh người dùng quét mã QR tại tủ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: QUANG CAO AN TUONG -->
+<section class="slide">
+  <div class="pill">Điểm mạnh sản phẩm</div>
+  <h2 class="title">Quảng cáo ấn tượng</h2>
+  <p class="desc" style="margin-bottom:26px;">Tạo ra quảng cáo ấn tượng bằng việc kết hợp với các yếu tố ngoại cảnh hoặc lồng ghép vào chức năng của tủ.</p>
+  <div class="grid2">
+    <div>
+      <div class="slot ar-4-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh — Kích thích thị giác</div>
+      </div>
+      <p style="text-align:center; font-weight:700; color:var(--navy); margin-top:10px; font-size:13px;">KÍCH THÍCH THỊ GIÁC</p>
+    </div>
+    <div>
+      <div class="slot ar-4-3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">+ Thêm ảnh — Tăng khả năng ghi nhớ</div>
+      </div>
+      <p style="text-align:center; font-weight:700; color:var(--navy); margin-top:10px; font-size:13px;">TĂNG KHẢ NĂNG GHI NHỚ</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: DA DANG HINH THUC - overview -->
+<section class="slide" id="hinhthuc">
+  <div class="pill">Điểm mạnh sản phẩm</div>
+  <h2 class="title">Đa dạng hình thức</h2>
+  <div class="grid2" style="grid-template-columns:1fr 1fr 1fr; gap:18px; margin-top:24px;">
+    <div>
+      <div class="slot ar-3-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">Brand-Awareness Banners</div>
+      </div>
+      <p class="caption-note" style="text-align:center;">Banner dán trước mặt tủ</p>
+    </div>
+    <div>
+      <div class="slot ar-3-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">QR Interactive Banners</div>
+      </div>
+      <p class="caption-note" style="text-align:center;">Banner tích hợp QR</p>
+    </div>
+    <div>
+      <div class="slot ar-3-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg>
+        <div class="add">Activation Banners</div>
+      </div>
+      <p class="caption-note" style="text-align:center;">Kích thích hành động tương tác</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: BRAND-AWARENESS DETAIL -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Brand-Awareness Banners</h2>
+  <div class="grid2" style="margin:18px 0 30px;">
+    <div class="list-box"><h4>🎯 Mục tiêu</h4><p>Tăng nhận diện thương hiệu, tạo độ phủ nhận diện, nhắc nhớ thương hiệu.</p></div>
+    <div class="list-box"><h4>💡 Sáng tạo</h4><p>Creative Idea tập trung vào việc truyền tải thông điệp thương hiệu một cách tự nhiên, trực quan và dễ ghi nhớ.</p></div>
+  </div>
+  <div class="grid2" style="grid-template-columns:1fr 1fr 1fr; gap:18px;">
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Trending Content</div></div></div>
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Storytelling</div></div></div>
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Visual Tricks</div></div></div>
+  </div>
+</section>
+
+<!-- SLIDE 9: QR INTERACTIVE DETAIL -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">QR Interactive Banners</h2>
+  <p class="desc" style="margin:14px 0 26px;">Hình thức tích hợp QR (nhận mã giảm giá / dẫn về landing page / form thông tin / download app).</p>
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <h4 style="color:var(--navy); font-size:14px; margin-bottom:16px;">Hành trình khách hàng</h4>
+      <div class="journey">
+        <div class="jstep"><h5>Thu hút</h5><p>Khách hàng bị cuốn hút bởi banner sáng tạo.</p></div>
+        <div class="jstep"><h5>Kích hoạt</h5><p>Lời kêu gọi thúc đẩy quét mã QR.</p></div>
+        <div class="jstep"><h5>Hành động</h5><p>Khách hàng được "dịch chuyển" đến trang mua hàng, nhận voucher đăng ký sample, hoặc biểu mẫu khảo sát.</p></div>
+      </div>
+    </div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr; gap:14px;">
+      <div class="stack" style="grid-column:span 2;">
+        <div class="slot ar-16-9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Nội dung khan hiếm</div></div>
+        <div style="display:flex; gap:14px;">
+          <div class="slot ar-1-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Nội dung bí ẩn</div></div>
+          <div class="slot ar-1-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Nội dung hài hước</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: ACTIVATION - Touchpoints at Stores -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Activation Banners — Touchpoints at Stores</h2>
+  <p class="desc" style="margin:14px 0 26px;">Thúc đẩy hành động tại điểm bán: tăng nhận diện thương hiệu, tăng doanh số tại điểm bán lân cận, giới thiệu sản phẩm.</p>
+  <div class="grid2" style="grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:24px;">
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Banner + QR tại tủ</div></div></div>
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Khách hàng tương tác quét mã</div></div></div>
+    <div><div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Chuyển đổi tại cửa hàng</div></div></div>
+  </div>
+  <div class="journey" style="max-width:640px;">
+    <div class="jstep"><h5>Thu hút</h5><p>Khách hàng nhìn thấy banner với lời mời gọi trực tiếp và hình ảnh bắt mắt.</p></div>
+    <div class="jstep"><h5>Tương tác</h5><p>Khách hàng mở tủ hoặc quét mã QR để lấy voucher.</p></div>
+    <div class="jstep"><h5>Chuyển đổi</h5><p>Khách hàng sử dụng voucher tại các điểm bán, cửa hàng lân cận.</p></div>
+  </div>
+</section>
+
+<!-- SLIDE 11: ACTIVATION - Touchpoints on Lockers -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Activation Banners — Touchpoints on Lockers</h2>
+  <p class="desc" style="margin:14px 0 26px;">Khách hàng trải nghiệm xem sản phẩm trực quan tại ngăn tủ trưng bày.</p>
+  <div class="grid2" style="grid-template-columns:repeat(4,1fr); gap:14px;">
+    <div><div class="slot ar-3-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Mở là có quà</div></div></div>
+    <div><div class="slot ar-3-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Trạm cứu trợ khẩn cấp</div></div></div>
+    <div><div class="slot ar-3-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Giải quyết vấn đề tức thì</div></div></div>
+    <div><div class="slot ar-3-4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">Kích hoạt các giác quan</div></div></div>
+  </div>
+</section>
+
+<!-- SLIDE 12: QUY TRINH TRIEN KHAI -->
+<section class="slide" id="quytrinh">
+  <h2 class="title" style="text-align:center;">Quy trình triển khai</h2>
+  <p class="desc" style="text-align:center; margin:0 auto 34px; max-width:420px;">Hai bên phối hợp triển khai dự án</p>
+  <div class="process">
+    <div class="step"><div class="marker">1</div><h4>Xác định mục tiêu</h4><p>ADELA nhận brief khách hàng về mục tiêu, đối tượng, kết quả mong muốn.</p></div>
+    <div class="step"><div class="marker">2</div><h4>Xây dựng kế hoạch</h4><p>ADELA tư vấn hướng tiếp cận, vị trí đặt tủ và hình thức quảng cáo phù hợp.</p></div>
+    <div class="step"><div class="marker">3</div><h4>Duyệt kế hoạch</h4><p>Doanh nghiệp và ADELA trao đổi, điều chỉnh kế hoạch theo sát mục tiêu.</p></div>
+    <div class="step"><div class="marker">4</div><h4>Sản xuất ấn phẩm</h4><p>ADELA sản xuất ấn phẩm (banner) theo kế hoạch được duyệt.</p></div>
+    <div class="step"><div class="marker">5</div><h4>Thi công</h4><p>Sản xuất, dán full tủ, bo góc, cắt vị trí QR. Kết thúc chiến dịch tháo decal &amp; vệ sinh tủ.</p></div>
+  </div>
+</section>
+
+<!-- SLIDE 13: THONG SO KY THUAT -->
+<section class="slide" id="thongso">
+  <div class="pill">Thông số kỹ thuật</div>
+  <h2 class="title">Kích thước tủ locker &amp; màn hình LCD</h2>
+  <p class="desc" style="margin-bottom:26px;">Thông số chuẩn dùng trong thiết kế và sản xuất ấn phẩm quảng cáo trên tủ ADELA Locker.</p>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-head"><div class="spec-icon">▭</div><h4>Banner Quảng Cáo</h4></div>
+      <div class="spec-values">
+        <div class="spec-val"><b>374</b><span>cm</span></div>
+        <div class="spec-x">×</div>
+        <div class="spec-val"><b>160</b><span>cm</span></div>
+      </div>
+      <div class="cap-label"><span>Chiều rộng</span><span>Chiều cao</span></div>
+      <p class="note">Kích thước toàn bộ mặt tủ locker (dán decal full).</p>
+    </div>
+    <div class="spec-card">
+      <div class="spec-head"><div class="spec-icon">▤</div><h4>Màn hình LCD</h4></div>
+      <div class="spec-values">
+        <div class="spec-val"><b>21</b><span>inch</span></div>
+        <div class="spec-x">·</div>
+        <div class="spec-val"><b>1080×1920</b><span>px (Portrait)</span></div>
+      </div>
+      <div class="cap-label"><span>Kích cỡ màn hình</span><span>Độ phân giải</span></div>
+      <p class="note">Màn hình dọc — hiển thị nội dung tương tác &amp; QR.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 14: BAO GIA DICH VU -->
+<section class="slide" id="giadichvu">
+  <h2 class="title" style="text-align:center;">Báo giá dịch vụ</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Brand-Awareness Banners</h3>
+      <div class="desc2">Banner dán mặt trước tủ — vị trí người dùng bắt buộc nhìn thấy khi mở tủ.</div>
+      <div class="old">10.500.000 VNĐ</div>
+      <div class="new">6.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 2.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Tư vấn chiến lược &amp; nội dung tiếp cận</li>
+        <li>Thiết kế ấn phẩm theo Key Visual</li>
+        <li>Thi công dán full tủ, bo góc, vệ sinh</li>
+        <li>Báo cáo chiến dịch</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+    <div class="price-card">
+      <h3>QR Interactive Banners</h3>
+      <div class="desc2">Banner tích hợp QR, hình ảnh trực quan giúp người dùng tương tác lập tức.</div>
+      <div class="old">12.500.000 VNĐ</div>
+      <div class="new">7.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 2.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Toàn bộ hạng mục gói Brand-Awareness</li>
+        <li>Cắt vị trí QR dẫn về landing page / voucher</li>
+        <li>Đo lường lượt quét mã, tỷ lệ chuyển đổi</li>
+        <li>Báo cáo chiến dịch chi tiết</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+    <div class="price-card">
+      <h3>Activation Banners</h3>
+      <div class="desc2">Banner có QR/voucher kết hợp ngăn tủ trưng bày sản phẩm hoặc voucher kích thích mua tại Stores gần nhất.</div>
+      <div class="old">15.000.000 VNĐ</div>
+      <div class="new">8.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 5.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Toàn bộ hạng mục gói QR Interactive</li>
+        <li>Setup ngăn tủ trưng bày sản phẩm thật</li>
+        <li>Thúc đẩy hành động mua tại điểm bán gần nhất</li>
+        <li>Báo cáo chiến dịch chi tiết</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+  </div>
+  <p class="caption-note" style="margin-top:16px; text-align:center;">Extra: gói đánh giá kết quả offline (khảo sát trực tiếp người dùng tại điểm đặt tủ): +5.000.000 VNĐ/tủ.</p>
+</section>
+
+<!-- SLIDE 15: HO TRO THEM -->
+<section class="slide">
+  <div class="pill">Hỗ trợ thêm</div>
+  <h2 class="title">Đi kèm khi thuê banner</h2>
+  <div class="addon-grid" style="margin-top:20px;">
+    <div class="addon-card">
+      <div class="num">HỖ TRỢ 01</div>
+      <h3>Phát sampling trực tiếp</h3>
+      <p>Đội ngũ real people phát mẫu dùng thử tại sự kiện và ngay tại điểm đặt tủ, kết hợp cùng banner để tăng trải nghiệm thật với sản phẩm.</p>
+      <span class="addon-tag">Real people · tại sự kiện &amp; tại tủ</span>
+    </div>
+    <div class="addon-card">
+      <div class="num">HỖ TRỢ 02</div>
+      <h3>Ưu đãi thuê ô mini vending</h3>
+      <p>Khách thuê banner được giảm ngay <b>30%</b> chi phí thuê ô mini vending machine đặt cạnh tủ locker — biến điểm quảng cáo thành điểm bán hàng tự động.</p>
+      <span class="addon-tag">Giảm 30% chi phí thuê ô</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 16: CHINH SACH UU DAI -->
+<section class="slide">
+  <h2 class="title" style="text-align:center;">Chính sách ưu đãi</h2>
+  <div class="combo-row">
+    <div class="combo-card">
+      <h4>COMBO 5 TỦ LOCKER</h4>
+      <ul>
+        <li>Giảm thêm 5% từ giá ưu đãi</li>
+        <li>Miễn phí ý tưởng &amp; thiết kế banner 2D</li>
+      </ul>
+    </div>
+    <div class="combo-card">
+      <h4>COMBO 10 TỦ LOCKER</h4>
+      <ul>
+        <li>Giảm thêm 5% từ giá ưu đãi</li>
+        <li>Miễn phí ý tưởng &amp; thiết kế banner 2D</li>
+        <li>Tặng gói khảo sát khách hàng (trị giá 5.000.000 VNĐ)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid2" style="grid-template-columns:repeat(3,1fr); gap:14px; margin-top:26px;">
+    <div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">+ Thêm ảnh chiến dịch 1</div></div>
+    <div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">+ Thêm ảnh chiến dịch 2</div></div>
+    <div class="slot ar-4-3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="8.5" cy="11.5" r="1.5"/><path d="M21 16l-4.5-4.5a2 2 0 00-2.83 0L7 18"/></svg><div class="add">+ Thêm ảnh chiến dịch 3</div></div>
+  </div>
+  <p class="caption-note" style="margin-top:16px;">Lưu ý: không bao gồm chi phí sử dụng hình ảnh (nếu có nhân vật/booking bản quyền).</p>
+</section>
+
+<!-- SLIDE 17: THANK YOU / LIEN HE -->
+<section class="slide foot-slide" id="lienhe">
+  <h2>Sẵn sàng đặt điểm tủ?</h2>
+  <p>1.000+ điểm tủ trên toàn quốc — vị trí lobby đẹp, lưu lượng cao luôn có hạn theo từng khu vực.</p>
+  <p class="contact">Hotline: [ĐIỀN SỐ HOTLINE ADELA] · [ĐIỀN EMAIL ADELA]</p>
+</section>
+
+<footer>© 2026 ADELA Building — Locker Ads, giải pháp OOH trên tủ locker thông minh.</footer>
+
+</body>
+</html>
