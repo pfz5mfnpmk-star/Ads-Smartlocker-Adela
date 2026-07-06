@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADELA Locker Ads — Giải pháp OOH trên tủ locker thông minh</title>
+<style>
+  :root{
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --bg:#eef1f6;
+    --card:#ffffff;
+    --navy:#122a6b;
+    --blue:#2657e0;
+    --blue-dark:#173da8;
+    --line:#e2e6ee;
+    --text:#1a1f2b;
+    --text-dim:#5b6472;
+    --text-dimmer:#8891a0;
+    --icon-blue:#2f5fde;
+    --icon-red:#d8455b;
+    --icon-green:#5fb544;
+    --icon-purple:#8b5cf6;
+    --radius-lg:22px;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth; overflow-x:hidden; width:100%;}
+  body{ background:var(--bg); color:var(--text); font-family:var(--font-main); line-height:1.55; overflow-x:hidden; width:100%; }
+  h1,h2,h3{ font-family:var(--font-main); color:var(--navy); font-weight:800; line-height:1.15; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 24px; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+
+  /* nav */
+  header{ position:sticky; top:0; z-index:60; background:rgba(238,241,246,0.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1180px; margin:0 auto; }
+  .logo{ font-weight:800; font-size:19px; color:var(--navy); display:flex; align-items:center; gap:8px; }
+  .logo span{ color:var(--text-dimmer); font-weight:500; font-size:13px; }
+  .nav-links{ display:flex; gap:26px; font-size:13.5px; color:var(--text-dim); font-weight:500; }
+  .nav-links a:hover{ color:var(--blue); }
+  .nav-cta{ background:var(--blue); color:#fff; font-weight:700; font-size:13.5px; padding:10px 18px; border-radius:9px; }
+  @media (max-width:840px){ .nav-links{ display:none; } }
+
+  /* pill */
+  .pill{ display:inline-flex; align-items:center; background:var(--blue); color:#fff; font-weight:700; font-size:12.5px; padding:8px 18px; border-radius:100px; margin-bottom:18px; }
+  .pill.outline{ background:#eaf0ff; color:var(--blue); }
+
+  /* slide card wrapper */
+  .slide{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-lg); box-shadow:0 14px 34px -18px rgba(18,42,107,0.18); padding:52px; margin:30px auto; max-width:1180px; }
+  @media (max-width:700px){ .slide{ padding:30px 22px; border-radius:16px; } }
+  .slide-band{ padding:6px 0; }
+
+  /* image placeholder */
+  .slot{
+    border:2px dashed #c7cfe0; border-radius:var(--radius); background:#f5f7fb;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    text-align:center; color:var(--text-dimmer); padding:18px; width:100%;
+  }
+  .slot svg{ width:26px; height:26px; opacity:0.55; }
+  .slot .add{ font-weight:700; font-size:13px; color:#9aa4b8; }
+  .slot .cap{ font-size:11.5px; color:#aab2c2; max-width:220px; }
+  .ar-16-9{ aspect-ratio:16/9; }
+  .ar-4-3{ aspect-ratio:4/3; }
+  .ar-1-1{ aspect-ratio:1/1; }
+  .ar-3-4{ aspect-ratio:3/4; }
+  .ar-9-16{ aspect-ratio:9/16; }
+  .ar-21-9{ aspect-ratio:21/9; }
+  .slot.has-img{
+    border:none; background-color:#e2e6ee; background-size:cover; background-position:center;
+    position:relative; padding:0;
+  }
+  .slot.has-img .slot-caption{
+    position:absolute; bottom:10px; left:10px; right:10px;
+    background:rgba(10,14,24,0.62); color:#fff; font-size:11.5px; font-weight:700;
+    padding:6px 12px; border-radius:100px; text-align:center;
+    max-width:calc(100% - 20px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .slot.has-img .kv-tag{ position:absolute; top:8px; left:8px; }
+
+  /* generic layout helpers */
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
+  @media (max-width:860px){ .grid2{ grid-template-columns:1fr; } }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media (max-width:760px){ .grid3{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:520px){ .grid3{ grid-template-columns:1fr; } }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  @media (max-width:760px){ .grid4{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:420px){ .grid4{ grid-template-columns:1fr; } }
+  .stack{ display:flex; flex-direction:column; gap:16px; }
+  h2.title{ font-size:clamp(24px,3vw,32px); margin-bottom:14px; }
+  p.desc{ color:var(--text-dim); font-size:15px; max-width:560px; }
+  p.desc b{ color:var(--text); }
+
+  /* stat row */
+  .stat-row{ display:flex; gap:34px; flex-wrap:wrap; margin-top:26px; }
+  .stat-group{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; row-gap:12px; }
+  .stat{ min-width:0; }
+  @media (max-width:480px){
+    .stat b{ font-size:26px; }
+    .badge-outline{ font-size:11px; padding:7px 12px; }
+  }
+  .stat b{ font-size:32px; color:var(--blue-dark); font-weight:800; display:block; }
+  .stat span{ font-size:12.5px; color:var(--text-dim); }
+  .badge-outline{ border:1px solid var(--blue); color:var(--blue); font-size:12px; font-weight:700; padding:8px 14px; border-radius:100px; white-space:nowrap; }
+
+  /* building grid */
+  .building-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:760px){ .building-grid{ grid-template-columns:repeat(2,1fr); } }
+  .building-grid .slot{ min-height:150px; position:relative; }
+  .kv-tag{ position:absolute; top:8px; left:8px; background:var(--card); border:1px solid var(--line); font-size:10.5px; font-weight:700; color:var(--navy); padding:4px 9px; border-radius:100px; }
+
+  .list-box{ background:#f5f7fb; border:1px solid var(--line); border-radius:var(--radius); padding:24px; }
+  .list-box h4{ color:var(--navy); font-size:14.5px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+  .list-box p, .list-box li{ font-size:13.5px; color:var(--text-dim); }
+  .list-box ul{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+
+  /* icon points (Hieu qua toi uu) */
+  .point{ display:flex; gap:16px; align-items:flex-start; padding:16px 0; }
+  .point-icon{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#fff; font-weight:800; font-size:13px; }
+  .point h4{ font-size:14px; color:var(--navy); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.01em; }
+  .point p{ font-size:13.5px; color:var(--text-dim); }
+
+  /* pricing (reuse light) */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:10px; }
+  @media (max-width:1080px){ .pricing-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:620px){ .pricing-grid{ grid-template-columns:1fr; } }
+  .price-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; display:flex; flex-direction:column; }
+  .price-card h3{ font-size:17px; margin-bottom:8px; }
+  .price-card .desc2{ font-size:12.5px; color:var(--text-dim); margin-bottom:16px; min-height:50px; }
+  .price-card .old{ font-size:13px; color:var(--text-dimmer); text-decoration:line-through; }
+  .price-card .new{ font-size:26px; font-weight:800; color:var(--navy); margin:2px 0; }
+  .price-card .per{ font-size:11.5px; color:var(--text-dimmer); margin-bottom:10px; }
+  .price-card .maint{ font-size:12px; color:var(--blue); font-weight:600; margin-bottom:16px; }
+  .price-card ul{ list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:18px; flex:1; }
+  .price-card li{ font-size:12.8px; color:var(--text-dim); padding-left:16px; position:relative; }
+  .price-card li::before{ content:'✓'; position:absolute; left:0; color:var(--blue); font-weight:700; }
+  .price-card .cta-btn{ text-align:center; background:var(--blue); color:#fff; border-radius:8px; padding:11px; font-weight:700; font-size:13.5px; }
+
+  .combo-row{ display:flex; gap:16px; margin-top:20px; flex-wrap:wrap; }
+  .combo-card{ flex:1; min-width:250px; border:1px dashed var(--blue); background:#eef2ff; border-radius:12px; padding:20px; }
+  .combo-card h4{ color:var(--blue-dark); font-size:13px; margin-bottom:10px; }
+  .combo-card ul{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .combo-card li{ font-size:12.8px; color:var(--text-dim); padding-left:14px; position:relative; }
+  .combo-card li::before{ content:'+'; position:absolute; left:0; color:var(--blue); font-weight:700; }
+
+  /* spec cards */
+  .spec-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:760px){ .spec-grid{ grid-template-columns:1fr; } }
+  .spec-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; }
+  .spec-card .spec-head{ display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--line); }
+  .spec-icon{ width:38px; height:38px; border-radius:9px; background:#eef2ff; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:800; }
+  .spec-card h4{ color:var(--navy); font-size:15px; }
+  .spec-values{ display:flex; gap:18px; align-items:center; margin-bottom:14px; }
+  .spec-val{ background:#eef2ff; border-radius:10px; padding:16px 20px; text-align:center; flex:1; min-width:0; }
+  .spec-val b{ word-break:break-word; }
+  @media (max-width:480px){
+    .spec-values{ flex-direction:column; align-items:stretch; gap:8px; }
+    .spec-val{ padding:14px; }
+    .spec-val b{ font-size:24px; }
+    .spec-x{ display:none; }
+  }
+  .spec-val b{ font-size:30px; color:var(--blue-dark); display:block; }
+  .spec-val span{ font-size:11.5px; color:var(--text-dim); }
+  .spec-x{ font-size:20px; color:var(--text-dimmer); }
+  .spec-card .cap-label{ display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-dimmer); margin-bottom:10px; }
+  .spec-card .note{ font-size:12.5px; color:var(--text-dim); font-style:italic; }
+
+  /* addon (support) */
+  .addon-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media (max-width:760px){ .addon-grid{ grid-template-columns:1fr; } }
+  .addon-card{ border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fbfcfe; }
+  .addon-card .num{ font-size:11.5px; color:var(--text-dimmer); font-weight:700; margin-bottom:10px; }
+  .addon-card h3{ font-size:18px; margin-bottom:8px; }
+  .addon-card p{ font-size:13.5px; color:var(--text-dim); margin-bottom:14px; }
+  .addon-tag{ display:inline-block; background:#eaf0ff; color:var(--blue-dark); font-size:12px; font-weight:700; padding:7px 14px; border-radius:100px; }
+
+  /* journey timeline (small) */
+  .journey{ display:flex; flex-direction:column; gap:20px; position:relative; padding-left:26px; }
+  .journey::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--line); }
+  .jstep{ position:relative; }
+  .jstep::before{ content:''; position:absolute; left:-26px; top:2px; width:12px; height:12px; border-radius:50%; background:var(--blue); }
+  .jstep h5{ font-size:12.5px; font-weight:800; color:var(--navy); text-transform:uppercase; margin-bottom:4px; letter-spacing:0.03em; }
+  .jstep p{ font-size:13px; color:var(--text-dim); }
+
+  /* process steps */
+  .process{ display:flex; gap:0; }
+  @media (max-width:880px){ .process{ flex-direction:column; gap:22px; } }
+  .step{ flex:1; padding:0 12px; position:relative; }
+  .step:first-child{ padding-left:0; }
+  .step:last-child{ padding-right:0; }
+  .step .marker{ width:38px; height:38px; border-radius:50%; background:var(--blue); color:#fff; font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .step h4{ font-size:13.5px; color:var(--navy); margin-bottom:6px; }
+  .step p{ font-size:12.5px; color:var(--text-dim); }
+
+  .foot-slide{ text-align:center; }
+  .foot-slide h2{ font-size:clamp(30px,5vw,52px); margin-bottom:16px; }
+  .foot-slide p{ color:var(--text-dim); font-size:15px; margin-bottom:8px; }
+  .foot-slide .contact{ color:var(--blue); font-weight:700; margin-top:16px; }
+
+  .contact-form{ max-width:560px; margin:32px auto 0; text-align:left; }
+  .cf-row{ display:flex; gap:16px; }
+  @media (max-width:560px){ .cf-row{ flex-direction:column; } }
+  .cf-field{ flex:1; min-width:0; margin-bottom:18px; }
+  .cf-field label{ display:block; font-size:13px; font-weight:600; color:var(--navy); margin-bottom:6px; }
+  .cf-field input, .cf-field select, .cf-field textarea{
+    width:100%; border:1px solid var(--line); border-radius:9px; padding:12px 14px;
+    font-family:var(--font-main); font-size:14px; color:var(--text); background:#fbfcfe;
+  }
+  .cf-field input:focus, .cf-field select:focus, .cf-field textarea:focus{ outline:none; border-color:var(--blue); background:#fff; }
+  .cf-field textarea{ resize:vertical; }
+  .cf-submit{
+    width:100%; background:var(--blue); color:#fff; font-weight:700; font-size:15px;
+    padding:15px; border:none; border-radius:10px; cursor:pointer; margin-top:4px;
+  }
+  .cf-submit:hover{ background:var(--blue-dark); }
+  .cf-submit:disabled{ opacity:0.6; cursor:not-allowed; }
+  .cf-status{ margin-top:14px; font-size:13px; color:var(--text-dim); min-height:18px; opacity:0; transition:opacity .3s ease; }
+  .cf-status.show{ opacity:1; color:var(--blue-dark); font-weight:600; }
+
+  footer{ text-align:center; padding:30px 0; color:var(--text-dimmer); font-size:12.5px; }
+  .caption-note{ font-size:11.5px; color:var(--text-dimmer); font-style:italic; margin-top:14px; }
+</style>
+</head>
+<body>
+
+<script>
+  // ========================================
+  // HƯỚNG DẪN: Thay đổi IMAGE_BASE_URL dưới đây
+  // ========================================
+  // Ví dụ: https://raw.githubusercontent.com/yourusername/repo/main/images/
+  // Hoặc: https://cdn.example.com/locker-ads/
+  const IMAGE_BASE_URL = "https://raw.githubusercontent.com/pfz5mfnpmk-star/main/images/";
+  
+  // Mapping STT -> tên file ảnh theo Excel
+  const imageMap = {
+    1: "1.JPG",       // Cover
+    2: "2.jpg",       // Giới thiệu - AEON MALL (nếu có local)
+    3: "3.jpg",       // Giới thiệu - banner
+    4: "4.jpg",       // KV Đống Đa
+    5: "5.jpg",       // KV Tây Hồ
+    6: "6.jpg",       // KV Ba Đình
+    7: "7.jpg",       // KV Hà Đông
+    8: "8.jpg",       // KV Hoàng Mai
+    9: "9.jpg",       // KV Long Biên
+    10: "10.JPG",     // Hiệu quả tối ưu - 1
+    11: "11.JPG",     // Hiệu quả tối ưu - 2
+    12: "12.JPG",     // Hiệu suất tối đa - 1
+    13: "13.JPG",     // Hiệu suất tối đa - 2
+    14: "14.JPG",     // Quảng cáo ấn tượng - 1
+    15: "15.JPG",     // Quảng cáo ấn tượng - 2
+    16: "16.JPG",     // Hình thức - Brand
+    17: "17.JPG",     // Hình thức - QR
+    18: "18.JPG",     // Hình thức - Activation
+    19: "19.JPG",     // Brand Awareness - Trending
+    20: "20.JPG",     // Brand Awareness - Story
+    21: "21.JPG",     // Brand Awareness - Visual
+    22: "22.JPG",     // QR Interactive - Khan hiếm
+    23: "23.JPG",     // QR Interactive - Bí ẩn
+    24: "24.JPG",     // QR Interactive - Hài hước
+    25: "25.JPG",     // Activation Stores - 1
+    26: "26.JPG",     // Activation Stores - 2
+    27: "27.JPG",     // Activation Stores - 3
+    28: "28.JPG",     // Activation Lockers - Quà
+    29: "29.JPG",     // Activation Lockers - Cứu trợ
+    30: "30.JPG",     // Activation Lockers - Vấn đề
+    31: "31.JPG",     // Activation Lockers - Giác quan
+    32: "32.JPG",     // Ưu đãi - 1
+    33: "33.JPG",     // Ưu đãi - 2
+    34: "34.JPG"      // Ưu đãi - 3
+  };
+
+  function getImageUrl(stt) {
+    const filename = imageMap[stt];
+    return filename ? IMAGE_BASE_URL + filename : null;
+  }
+</script>
+
+<header>
+  <div class="nav">
+    <div class="logo">ADELA <span>Locker Ads</span></div>
+    <nav class="nav-links">
+      <a href="#hinhthuc">Hình thức</a>
+      <a href="#quytrinh">Quy trình</a>
+      <a href="#thongso">Thông số</a>
+      <a href="#giadichvu">Báo giá</a>
+    </nav>
+    <a href="#lienhe" class="nav-cta">Liên hệ tư vấn</a>
+  </div>
+</header>
+
+<!-- SLIDE 1: COVER -->
+<section class="slide">
+  <div class="grid2">
+    <div>
+      <h1 style="font-size:clamp(40px,6vw,64px);">Locker<br>Ads</h1>
+      <p class="desc" style="margin-top:16px;">Giải pháp OOH quảng cáo trên tủ locker thông minh — do ADELA phát triển và vận hành trên mạng lưới 1.000+ điểm tủ toàn quốc.</p>
+    </div>
+    <div class="slot ar-16-9 has-img" id="img-1"><span class="slot-caption">STT 1 - Cover</span></div>
+  </div>
+</section>
+
+<!-- SLIDE 2: GIOI THIEU -->
+<section class="slide">
+  <div class="grid2">
+    <div>
+      <div class="pill">Giới thiệu</div>
+      <h2 class="title">Locker Ads</h2>
+      <p class="desc"><b>Là quảng cáo trên tủ locker</b> (hộp giao – nhận hàng tự động) tại chung cư, khu dân cư, siêu thị hoặc các điểm công cộng.</p>
+      <div class="stat-row">
+        <div class="stat-group">
+          <div class="stat"><b>1.000+</b><span>Điểm tủ toàn quốc</span></div>
+          <div class="stat"><b>250K+</b><span>Căn hộ*</span></div>
+          <div class="badge-outline">Độ phủ hệ thống</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-group">
+          <div class="stat"><b>900K+</b><span>Cư dân*</span></div>
+          <div class="stat"><b>150K+</b><span>Lượt sử dụng/tháng*</span></div>
+          <div class="badge-outline">Phạm vi tiếp cận</div>
+        </div>
+      </div>
+      <p class="caption-note">* Ước tính theo tỷ lệ trung bình mỗi điểm, quy đổi từ mạng lưới hiện tại lên quy mô 1.000+ điểm.</p>
+    </div>
+    <div class="stack">
+      <div class="slot ar-4-3" id="img-2"><span class="slot-caption">STT 2 - AEON MALL</span></div>
+      <div class="slot ar-4-3" id="img-3"><span class="slot-caption">STT 3 - Banner thương hiệu</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: NHAM CHON CHINH XAC -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="building-grid">
+        <div class="slot ar-3-4" id="img-4"><div class="kv-tag">KV Đống Đa (STT 4)</div></div>
+        <div class="slot ar-3-4" id="img-5"><div class="kv-tag">KV Tây Hồ (STT 5)</div></div>
+        <div class="slot ar-3-4" id="img-6"><div class="kv-tag">KV Ba Đình (STT 6)</div></div>
+        <div class="slot ar-3-4" id="img-7"><div class="kv-tag">KV Hà Đông (STT 7)</div></div>
+        <div class="slot ar-3-4" id="img-8"><div class="kv-tag">KV Hoàng Mai (STT 8)</div></div>
+        <div class="slot ar-3-4" id="img-9"><div class="kv-tag">KV Long Biên (STT 9)</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Nhắm chọn chính xác</h2>
+      <p class="desc" style="margin-bottom:22px;">ADELA đưa ra các tiêu chí để khách hàng lựa chọn vị trí đặt tủ phù hợp với mục tiêu chiến dịch quảng cáo.</p>
+      <div class="stack">
+        <div class="list-box">
+          <h4>🏢 Theo nhóm chung cư</h4>
+          <ul>
+            <li><b>Cao cấp:</b> Vinhomes Nguyễn Chí Thanh, Hanoi Aqua Central, The Manor &amp; The Garden, 6th Element, Season Avenue...</li>
+            <li><b>Trung cấp:</b> The Sun, AnLand Complex, Fivestar Garden, Thống Nhất Complex, River Garden, Intracom Riverside...</li>
+            <li><b>Bình dân:</b> OCT5 Cổ Nhuế, CT2 Yên Nghĩa, 19T4 Kiến Hưng, An Lạc, H10 Thanh Xuân.</li>
+          </ul>
+        </div>
+        <div class="list-box">
+          <h4>📍 Theo vị trí</h4>
+          <p>Khu vực Tây Hồ, Bắc Từ Liêm, Nam Từ Liêm, Đống Đa, Cầu Giấy, Hà Đông, Ba Đình, Thanh Xuân, Hoàng Mai, Đông Anh, Long Biên...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: HIEU QUA TOI UU -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Hiệu quả tối ưu</h2>
+      <div class="stack" style="margin-top:18px;">
+        <div class="slot ar-16-9" id="img-10"><span class="slot-caption">STT 10 - AEON MALL</span></div>
+        <div class="slot ar-16-9" id="img-11"><span class="slot-caption">STT 11 - Hoạt động ngoài trời</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-blue);">3H</div>
+        <div><h4>High Reach – Precision – Frequency</h4><p>Tủ locker là điểm chạm bắt buộc, tiếp cận đúng nhóm cư dân/nhân viên văn phòng thu nhập cao với tần suất lặp lại lớn và thời gian đứng chờ 15–30s, giúp gia tăng trí nhớ thương hiệu vượt trội.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-red);">🎯</div>
+        <div><h4>Tiếp cận đúng người – đúng bối cảnh</h4><p>Thông điệp chỉ tiếp cận cư dân thực sự của tòa nhà — nhóm có thu nhập ổn định, sức mua cao và thói quen mua sắm online thường xuyên.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-green);">O2O</div>
+        <div><h4>Kích hoạt Online-to-Offline &amp; Retargeting</h4><p>Thời gian chờ giúp người dùng dễ dàng quét QR, nhận ưu đãi, đồng thời có thể retarget lại chính xác nhờ dữ liệu địa chỉ nhận hàng.</p></div>
+      </div>
+      <div class="point">
+        <div class="point-icon" style="background:var(--icon-purple);">🛒</div>
+        <div><h4>Thời điểm tiếp xúc lý tưởng</h4><p>Người dùng nhận hàng trong tâm trạng tích cực — mong chờ, dễ tiếp nhận thông điệp và bị tác động mạnh bởi quảng cáo liên quan đến nhu cầu vừa phát sinh.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: HIEU SUAT TOI DA -->
+<section class="slide">
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <div class="pill">Điểm mạnh sản phẩm</div>
+      <h2 class="title">Hiệu suất tối đa &amp; Đo lường chính xác</h2>
+      <div class="stack" style="margin-top:18px;">
+        <div class="point" style="padding-top:0;">
+          <div class="point-icon" style="background:var(--icon-blue);">↗</div>
+          <div><h4>Độc quyền vị trí quảng cáo</h4><p>Xuất hiện trong không gian riêng tư của chung cư, tạo cảm giác uy tín – độc quyền, không gây phiền nhiễu.</p></div>
+        </div>
+        <div class="point">
+          <div class="point-icon" style="background:var(--icon-green);">⚛</div>
+          <div><h4>Gắn kết tối đa với không gian sống</h4><p>Đặt ngay trong môi trường sống (lobby, tầng trệt), tạo cảm giác thân thuộc – tin cậy, liên kết trực tiếp với hành vi mua sắm online vừa diễn ra.</p></div>
+        </div>
+        <div class="point">
+          <div class="point-icon" style="background:var(--icon-purple);">📊</div>
+          <div><h4>Dễ dàng đo lường hiệu quả</h4><p>Đo lường tỷ lệ chuyển đổi (conversion rate) qua số lần quét mã QR hoặc sử dụng mã giảm giá đặc biệt.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="slot ar-16-9" id="img-12"><span class="slot-caption">STT 12 - Sảnh chung cư</span></div>
+      <div class="slot ar-4-3" id="img-13"><span class="slot-caption">STT 13 - Quét mã QR</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: QUANG CAO AN TUONG -->
+<section class="slide">
+  <div class="pill">Điểm mạnh sản phẩm</div>
+  <h2 class="title">Quảng cáo ấn tượng</h2>
+  <p class="desc" style="margin-bottom:26px;">Tạo ra quảng cáo ấn tượng bằng việc kết hợp với các yếu tố ngoại cảnh hoặc lồng ghép vào chức năng của tủ.</p>
+  <div class="grid2">
+    <div>
+      <div class="slot ar-4-3" id="img-14"><span class="slot-caption">STT 14 - Kích thích thị giác</span></div>
+      <p style="text-align:center; font-weight:700; color:var(--navy); margin-top:10px; font-size:13px;">KÍCH THÍCH THỊ GIÁC</p>
+    </div>
+    <div>
+      <div class="slot ar-4-3" id="img-15"><span class="slot-caption">STT 15 - Ghi nhớ</span></div>
+      <p style="text-align:center; font-weight:700; color:var(--navy); margin-top:10px; font-size:13px;">TĂNG KHẢ NĂNG GHI NHỚ</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: DA DANG HINH THUC - overview -->
+<section class="slide" id="hinhthuc">
+  <div class="pill">Điểm mạnh sản phẩm</div>
+  <h2 class="title">Đa dạng hình thức</h2>
+  <div class="grid3" style="margin-top:24px;">
+    <div>
+      <div class="slot ar-3-4" id="img-16"><span class="slot-caption">STT 16 - Brand-Awareness</span></div>
+      <p class="caption-note" style="text-align:center;">Banner dán trước mặt tủ</p>
+    </div>
+    <div>
+      <div class="slot ar-3-4" id="img-17"><span class="slot-caption">STT 17 - QR Interactive</span></div>
+      <p class="caption-note" style="text-align:center;">Banner tích hợp QR</p>
+    </div>
+    <div>
+      <div class="slot ar-3-4" id="img-18"><span class="slot-caption">STT 18 - Activation</span></div>
+      <p class="caption-note" style="text-align:center;">Kích thích hành động tương tác</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: BRAND-AWARENESS DETAIL -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Brand-Awareness Banners</h2>
+  <div class="grid2" style="margin:18px 0 30px;">
+    <div class="list-box"><h4>🎯 Mục tiêu</h4><p>Tăng nhận diện thương hiệu, tạo độ phủ nhận diện, nhắc nhớ thương hiệu.</p></div>
+    <div class="list-box"><h4>💡 Sáng tạo</h4><p>Creative Idea tập trung vào việc truyền tải thông điệp thương hiệu một cách tự nhiên, trực quan và dễ ghi nhớ.</p></div>
+  </div>
+  <div class="grid3">
+    <div><div class="slot ar-4-3" id="img-19"><span class="slot-caption">STT 19 - Trending</span></div></div>
+    <div><div class="slot ar-4-3" id="img-20"><span class="slot-caption">STT 20 - Story</span></div></div>
+    <div><div class="slot ar-4-3" id="img-21"><span class="slot-caption">STT 21 - Visual Tricks</span></div></div>
+  </div>
+</section>
+
+<!-- SLIDE 9: QR INTERACTIVE DETAIL -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">QR Interactive Banners</h2>
+  <p class="desc" style="margin:14px 0 26px;">Hình thức tích hợp QR (nhận mã giảm giá / dẫn về landing page / form thông tin / download app).</p>
+  <div class="grid2" style="align-items:flex-start;">
+    <div>
+      <h4 style="color:var(--navy); font-size:14px; margin-bottom:16px;">Hành trình khách hàng</h4>
+      <div class="journey">
+        <div class="jstep"><h5>Thu hút</h5><p>Khách hàng bị cuốn hút bởi banner sáng tạo.</p></div>
+        <div class="jstep"><h5>Kích hoạt</h5><p>Lời kêu gọi thúc đẩy quét mã QR.</p></div>
+        <div class="jstep"><h5>Hành động</h5><p>Khách hàng được "dịch chuyển" đến trang mua hàng, nhận voucher đăng ký sample, hoặc biểu mẫu khảo sát.</p></div>
+      </div>
+    </div>
+    <div class="grid2" style="gap:14px;">
+      <div class="stack" style="grid-column:span 2;">
+        <div class="slot ar-16-9" id="img-22"><span class="slot-caption">STT 22 - Khan hiếm</span></div>
+        <div style="display:flex; gap:14px;">
+          <div class="slot ar-1-1" id="img-23"><span class="slot-caption">STT 23 - Bí ẩn</span></div>
+          <div class="slot ar-1-1" id="img-24"><span class="slot-caption">STT 24 - Hài hước</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: ACTIVATION - Touchpoints at Stores -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Activation Banners — Touchpoints at Stores</h2>
+  <p class="desc" style="margin:14px 0 26px;">Thúc đẩy hành động tại điểm bán: tăng nhận diện thương hiệu, tăng doanh số tại điểm bán lân cận, giới thiệu sản phẩm.</p>
+  <div class="grid3" style="margin-bottom:24px;">
+    <div><div class="slot ar-4-3" id="img-25"><span class="slot-caption">STT 25 - Banner + QR</span></div></div>
+    <div><div class="slot ar-4-3" id="img-26"><span class="slot-caption">STT 26 - Quét mã</span></div></div>
+    <div><div class="slot ar-4-3" id="img-27"><span class="slot-caption">STT 27 - Chuyển đổi</span></div></div>
+  </div>
+  <div class="journey" style="max-width:640px;">
+    <div class="jstep"><h5>Thu hút</h5><p>Khách hàng nhìn thấy banner với lời mời gọi trực tiếp và hình ảnh bắt mắt.</p></div>
+    <div class="jstep"><h5>Tương tác</h5><p>Khách hàng mở tủ hoặc quét mã QR để lấy voucher.</p></div>
+    <div class="jstep"><h5>Chuyển đổi</h5><p>Khách hàng sử dụng voucher tại các điểm bán, cửa hàng lân cận.</p></div>
+  </div>
+</section>
+
+<!-- SLIDE 11: ACTIVATION - Touchpoints on Lockers -->
+<section class="slide">
+  <div class="pill outline">Đa dạng hình thức</div>
+  <h2 class="title">Activation Banners — Touchpoints on Lockers</h2>
+  <p class="desc" style="margin:14px 0 26px;">Khách hàng trải nghiệm xem sản phẩm trực quan tại ngăn tủ trưng bày.</p>
+  <div class="grid4">
+    <div><div class="slot ar-3-4" id="img-28"><span class="slot-caption">STT 28 - Quà</span></div></div>
+    <div><div class="slot ar-3-4" id="img-29"><span class="slot-caption">STT 29 - Cứu trợ</span></div></div>
+    <div><div class="slot ar-3-4" id="img-30"><span class="slot-caption">STT 30 - Vấn đề</span></div></div>
+    <div><div class="slot ar-3-4" id="img-31"><span class="slot-caption">STT 31 - Giác quan</span></div></div>
+  </div>
+</section>
+
+<!-- SLIDE 12: QUY TRINH TRIEN KHAI -->
+<section class="slide" id="quytrinh">
+  <h2 class="title" style="text-align:center;">Quy trình triển khai</h2>
+  <p class="desc" style="text-align:center; margin:0 auto 34px; max-width:420px;">Hai bên phối hợp triển khai dự án</p>
+  <div class="process">
+    <div class="step"><div class="marker">1</div><h4>Xác định mục tiêu</h4><p>ADELA nhận brief khách hàng về mục tiêu, đối tượng, kết quả mong muốn.</p></div>
+    <div class="step"><div class="marker">2</div><h4>Xây dựng kế hoạch</h4><p>ADELA tư vấn hướng tiếp cận, vị trí đặt tủ và hình thức quảng cáo phù hợp.</p></div>
+    <div class="step"><div class="marker">3</div><h4>Duyệt kế hoạch</h4><p>Doanh nghiệp và ADELA trao đổi, điều chỉnh kế hoạch theo sát mục tiêu.</p></div>
+    <div class="step"><div class="marker">4</div><h4>Sản xuất ấn phẩm</h4><p>ADELA sản xuất ấn phẩm (banner) theo kế hoạch được duyệt.</p></div>
+    <div class="step"><div class="marker">5</div><h4>Thi công</h4><p>Sản xuất, dán full tủ, bo góc, cắt vị trí QR. Kết thúc chiến dịch tháo decal &amp; vệ sinh tủ.</p></div>
+  </div>
+</section>
+
+<!-- SLIDE 13: THONG SO KY THUAT -->
+<section class="slide" id="thongso">
+  <div class="pill">Thông số kỹ thuật</div>
+  <h2 class="title">Kích thước tủ locker &amp; màn hình LCD</h2>
+  <p class="desc" style="margin-bottom:26px;">Thông số chuẩn dùng trong thiết kế và sản xuất ấn phẩm quảng cáo trên tủ ADELA Locker.</p>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-head"><div class="spec-icon">▭</div><h4>Banner Quảng Cáo</h4></div>
+      <div class="spec-values">
+        <div class="spec-val"><b>374</b><span>cm</span></div>
+        <div class="spec-x">×</div>
+        <div class="spec-val"><b>160</b><span>cm</span></div>
+      </div>
+      <div class="cap-label"><span>Chiều rộng</span><span>Chiều cao</span></div>
+      <p class="note">Kích thước toàn bộ mặt tủ locker (dán decal full).</p>
+    </div>
+    <div class="spec-card">
+      <div class="spec-head"><div class="spec-icon">▤</div><h4>Màn hình LCD</h4></div>
+      <div class="spec-values">
+        <div class="spec-val"><b>21</b><span>inch</span></div>
+        <div class="spec-x">·</div>
+        <div class="spec-val"><b>1080×1920</b><span>px (Portrait)</span></div>
+      </div>
+      <div class="cap-label"><span>Kích cỡ màn hình</span><span>Độ phân giải</span></div>
+      <p class="note">Màn hình dọc — hiển thị nội dung tương tác &amp; QR.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 14: BAO GIA DICH VU -->
+<section class="slide" id="giadichvu">
+  <h2 class="title" style="text-align:center;">Báo giá dịch vụ</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Brand-Awareness Banners</h3>
+      <div class="desc2">Banner dán mặt trước tủ — vị trí người dùng bắt buộc nhìn thấy khi mở tủ.</div>
+      <div class="old">10.500.000 VNĐ</div>
+      <div class="new">6.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 2.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Tư vấn chiến lược &amp; nội dung tiếp cận</li>
+        <li>Thiết kế ấn phẩm theo Key Visual</li>
+        <li>Thi công dán full tủ, bo góc, vệ sinh</li>
+        <li>Báo cáo chiến dịch</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+    <div class="price-card">
+      <h3>QR Interactive Banners</h3>
+      <div class="desc2">Banner tích hợp QR, hình ảnh trực quan giúp người dùng tương tác lập tức.</div>
+      <div class="old">12.500.000 VNĐ</div>
+      <div class="new">7.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 2.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Toàn bộ hạng mục gói Brand-Awareness</li>
+        <li>Cắt vị trí QR dẫn về landing page / voucher</li>
+        <li>Đo lường lượt quét mã, tỷ lệ chuyển đổi</li>
+        <li>Báo cáo chiến dịch chi tiết</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+    <div class="price-card">
+      <h3>Activation Banners</h3>
+      <div class="desc2">Banner có QR/voucher kết hợp ngăn tủ trưng bày sản phẩm hoặc voucher kích thích mua tại Stores gần nhất.</div>
+      <div class="old">15.000.000 VNĐ</div>
+      <div class="new">8.500.000 VNĐ</div>
+      <div class="per">/ 1 tháng đầu tiên / 1 tủ locker</div>
+      <div class="maint">Phí duy trì từ tháng 2: 5.000.000đ/tủ/tháng</div>
+      <ul>
+        <li>Toàn bộ hạng mục gói QR Interactive</li>
+        <li>Setup ngăn tủ trưng bày sản phẩm thật</li>
+        <li>Thúc đẩy hành động mua tại điểm bán gần nhất</li>
+        <li>Báo cáo chiến dịch chi tiết</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+    <div class="price-card">
+      <h3>Quảng cáo màn hình LCD</h3>
+      <div class="desc2">Chạy nội dung động (ảnh/video) trên màn hình LCD 21 inch tích hợp tại tủ — linh hoạt đổi nội dung theo ngày.</div>
+      <div class="new">9.000 VNĐ</div>
+      <div class="per">/ ngày / 1 tủ locker</div>
+      <div class="maint">Quy đổi ~270.000đ/tháng nếu chạy liên tục 30 ngày</div>
+      <ul>
+        <li>Phát nội dung động (ảnh/video) trên màn LCD</li>
+        <li>Đổi nội dung linh hoạt theo ngày/chiến dịch</li>
+        <li>Phù hợp chiến dịch ngắn hạn, theo đợt, theo mùa vụ</li>
+        <li>Báo cáo tần suất hiển thị</li>
+      </ul>
+      <a href="#lienhe" class="cta-btn">Chọn gói này</a>
+    </div>
+  </div>
+  <p class="caption-note" style="margin-top:16px; text-align:center;">Extra: gói đánh giá kết quả offline (khảo sát trực tiếp người dùng tại điểm đặt tủ): +5.000.000 VNĐ/tủ.</p>
+</section>
+
+<!-- SLIDE 15: HO TRO THEM -->
+<section class="slide">
+  <div class="pill">Hỗ trợ thêm</div>
+  <h2 class="title">Đi kèm khi thuê banner</h2>
+  <div class="addon-grid" style="margin-top:20px;">
+    <div class="addon-card">
+      <div class="num">HỖ TRỢ 01</div>
+      <h3>Phát sampling trực tiếp</h3>
+      <p>Đội ngũ real people phát mẫu dùng thử tại sự kiện và ngay tại điểm đặt tủ, kết hợp cùng banner để tăng trải nghiệm thật với sản phẩm.</p>
+      <span class="addon-tag">Real people · tại sự kiện &amp; tại tủ</span>
+    </div>
+    <div class="addon-card">
+      <div class="num">HỖ TRỢ 02</div>
+      <h3>Ưu đãi thuê ô mini vending</h3>
+      <p>Khách thuê banner được giảm ngay <b>30%</b> chi phí thuê ô mini vending machine đặt cạnh tủ locker — biến điểm quảng cáo thành điểm bán hàng tự động.</p>
+      <span class="addon-tag">Giảm 30% chi phí thuê ô</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 16: CHINH SACH UU DAI -->
+<section class="slide">
+  <h2 class="title" style="text-align:center;">Chính sách ưu đãi</h2>
+  <div class="combo-row">
+    <div class="combo-card">
+      <h4>COMBO 5 TỦ LOCKER</h4>
+      <ul>
+        <li>Giảm thêm 5% từ giá ưu đãi</li>
+        <li>Miễn phí ý tưởng &amp; thiết kế banner 2D</li>
+      </ul>
+    </div>
+    <div class="combo-card">
+      <h4>COMBO 10 TỦ LOCKER</h4>
+      <ul>
+        <li>Giảm thêm 5% từ giá ưu đãi</li>
+        <li>Miễn phí ý tưởng &amp; thiết kế banner 2D</li>
+        <li>Tặng gói khảo sát khách hàng (trị giá 5.000.000 VNĐ)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:26px;">
+    <div><div class="slot ar-4-3" id="img-32"><span class="slot-caption">STT 32 - Chiến dịch 1</span></div></div>
+    <div><div class="slot ar-4-3" id="img-33"><span class="slot-caption">STT 33 - Chiến dịch 2</span></div></div>
+    <div><div class="slot ar-4-3" id="img-34"><span class="slot-caption">STT 34 - Chiến dịch 3</span></div></div>
+  </div>
+  <p class="caption-note" style="margin-top:16px;">Lưu ý: không bao gồm chi phí sử dụng hình ảnh (nếu có nhân vật/booking bản quyền).</p>
+</section>
+
+<!-- SLIDE 17: THANK YOU / LIEN HE -->
+<section class="slide foot-slide" id="lienhe">
+  <h2>Sẵn sàng đặt điểm tủ?</h2>
+  <p>1.000+ điểm tủ trên toàn quốc — vị trí lobby đẹp, lưu lượng cao luôn có hạn theo từng khu vực. Để lại thông tin, ADELA sẽ liên hệ tư vấn trong 24h.</p>
+
+  <form id="contactForm" class="contact-form" onsubmit="return handleContactSubmit(event)">
+    <input type="hidden" name="_subject" value="Yêu cầu tư vấn Locker Ads">
+    <div class="cf-row">
+      <div class="cf-field">
+        <label for="cf-name">Họ và tên *</label>
+        <input type="text" id="cf-name" name="name" required placeholder="Nguyễn Văn A">
+      </div>
+      <div class="cf-field">
+        <label for="cf-phone">Số điện thoại *</label>
+        <input type="tel" id="cf-phone" name="phone" required placeholder="09xx xxx xxx">
+      </div>
+    </div>
+    <div class="cf-row">
+      <div class="cf-field">
+        <label for="cf-company">Công ty / Thương hiệu</label>
+        <input type="text" id="cf-company" name="company" placeholder="Tên công ty hoặc thương hiệu">
+      </div>
+      <div class="cf-field">
+        <label for="cf-interest">Quan tâm gói nào?</label>
+        <select id="cf-interest" name="interest">
+          <option>Brand-Awareness Banners</option>
+          <option>QR Interactive Banners</option>
+          <option>Activation Banners</option>
+          <option>Quảng cáo màn hình LCD</option>
+          <option>Chưa rõ, cần tư vấn thêm</option>
+        </select>
+      </div>
+    </div>
+    <div class="cf-field">
+      <label for="cf-note">Ghi chú thêm</label>
+      <textarea id="cf-note" name="note" rows="3" placeholder="Số lượng tủ dự kiến, khu vực mong muốn, thời gian chạy chiến dịch..."></textarea>
+    </div>
+    <button type="submit" class="cf-submit" id="cf-submit-btn">Gửi yêu cầu tư vấn →</button>
+    <p id="cf-status" class="cf-status"></p>
+  </form>
+</section>
+
+<footer>© 2026 ADELA Building — Locker Ads, giải pháp OOH trên tủ locker thông minh.</footer>
+
+<script>
+  // Load tất cả ảnh theo mapping
+  function loadAllImages() {
+    for (let stt = 1; stt <= 34; stt++) {
+      const imgUrl = getImageUrl(stt);
+      const imgElement = document.getElementById(`img-${stt}`);
+      
+      if (imgElement && imgUrl) {
+        imgElement.style.backgroundImage = `url('${imgUrl}')`;
+        imgElement.classList.add('has-img');
+      }
+    }
+  }
+
+  // Gọi khi DOM sẵn sàng
+  document.addEventListener('DOMContentLoaded', loadAllImages);
+
+  // Form submission (Formspree)
+  var FORMSPREE_ENDPOINT = "https://formspree.io/f/xojoljzg";
+
+  function handleContactSubmit(e){
+    e.preventDefault();
+    var form = document.getElementById('contactForm');
+    var btn = document.getElementById('cf-submit-btn');
+    var status = document.getElementById('cf-status');
+
+    btn.disabled = true;
+    btn.textContent = "Đang gửi...";
+
+    fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: { "Accept": "application/json" },
+      body: new FormData(form)
+    }).then(function(response){
+      if(response.ok){
+        status.textContent = "Đã gửi thành công! ADELA sẽ liên hệ lại sớm nhất.";
+        status.classList.add('show');
+        form.reset();
+      } else {
+        status.textContent = "Chưa gửi được — vui lòng kiểm tra lại Formspree Form ID trong code, hoặc gọi hotline trực tiếp.";
+        status.classList.add('show');
+      }
+    }).catch(function(){
+      status.textContent = "Lỗi kết nối — vui lòng thử lại hoặc liên hệ trực tiếp qua hotline.";
+      status.classList.add('show');
+    }).finally(function(){
+      btn.disabled = false;
+      btn.textContent = "Gửi yêu cầu tư vấn →";
+    });
+
+    return false;
+  }
+</script>
+
+</body>
+</html>
